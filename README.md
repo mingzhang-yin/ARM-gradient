@@ -1,6 +1,6 @@
 # ARM:Augment-REINFORCE-merge gradient for discrete latent variable models 
 
-Code to get the simulation results in [ARM:Augment-REINFORCE-merge gradient for discrete latent variable models](https://arxiv.org/abs/1807.11143)
+Code to show the simulation results in [ARM:Augment-REINFORCE-merge gradient for discrete latent variable models](https://arxiv.org/abs/1807.11143)
 
 
 # Citations
