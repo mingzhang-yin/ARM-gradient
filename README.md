@@ -2,6 +2,9 @@
 
 Code to show the simulation results in [ARM:Augment-REINFORCE-merge gradient for discrete latent variable models](https://arxiv.org/abs/1807.11143)
 
+# Data sets
+The MNIST data is  self-contained and the Omniglot data is uploaded <br />
+Have fun! =)
 
 # Citations
 
