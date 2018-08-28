@@ -1,4 +1,4 @@
-#This code can only train with M==1, because when M=1, lower bound and the true object are same
+
 from __future__ import absolute_import
 from __future__ import division
 from __future__ import print_function
