@@ -61,8 +61,6 @@ def decoder(b,x_dim,reuse=False):
         latent_dim = np.prod(shape[2:]) #equal to z_concate_dim
         b = tf.reshape(b, [-1, shape[1],latent_dim])    
         h2 = slim.stack(b, slim.fully_connected,[256,512],activation_fn=lrelu)
-        #h1 = tf.layers.dense(2. * b - 1., 200, tf.nn.relu, name="decoder_1")
-        #h2 = tf.layers.dense(h1, 200, tf.nn.relu, name="decoder_2")
         logit_x = tf.layers.dense(h2, x_dim, activation = None)
     return logit_x
     
@@ -129,18 +127,7 @@ def swap(pai,j,m):
     
     return tf.transpose(tf.gather(tf.transpose(pai),id2))
 
-#def pick0(z_concate):
-#    z1 = tf.expand_dims(z_concate,axis=2)
-#    z2 = tf.expand_dims(z_concate,axis=3)
-#    #sig = tf.sigmoid(-tf.abs(z1-z2))*(tf.exp(z1)+tf.exp(z2))/tf.reduce_sum(tf.exp(z1),axis=3,keep_dims=True)
-#    
-#    maxi = tf.maximum(z1,z2)
-#    sig0 = 2*maxi/(tf.abs(tf.exp(z1)-tf.exp(z2))+tf.reduce_sum(tf.exp(z1),axis=3,keep_dims=True))
-#    sig1 = tf.sigmoid(-tf.abs(z1-z2))
-#    sig = 1 - sig0 + sig0*(1-2*sig1)
-#    sig = tf.reduce_sum(sig,axis=2)
-#    sig = tf.reduce_mean(sig,axis=[0,1])
-#    return tf.cast(tf.argmax(sig,axis=0),tf.int32)
+
 
 def pick(z_concate):
     z_ave = tf.reduce_mean(z_concate,axis=[0,1])
@@ -196,7 +183,6 @@ pai = Dir.sample(sample_shape=[N,K_u,n_cv]) #[N,K_u,n_cv,n_class]
 x_star_u = tf.tile(tf.expand_dims(x_binary,axis=1),[1,K_u,1]) #N*K_u*d_x
 
 jj = 0
-#jj = pick(z_concate)
 
 pai_slice_j = tf.slice(pai,begin=[0,0,0,jj],size=[-1,-1,-1,1]) #N,K_u,n_cv,1
 pai_j = swap(pai,jj,0)
@@ -215,7 +201,6 @@ alpha_grads = tf.reduce_mean(alpha_grads,axis=1) #N*n_cv*d_b, expectation over p
 alpha_grads = tf.reshape(alpha_grads,[-1,z_dim])
 inf_vars = tf.get_collection(tf.GraphKeys.GLOBAL_VARIABLES, scope='encoder')
 #log_alpha_b is #N*z_dim, alpha_grads is N*z_dim, inf_vars is d_theta
-#d_theta, should devide by batch-size, but can be absorb into learning rate
 inf_grads = tf.gradients(z0, inf_vars, grad_ys=alpha_grads)#/b_s
 inf_gradvars = zip(inf_grads, inf_vars)
 inf_opt = tf.train.AdamOptimizer(lr)
