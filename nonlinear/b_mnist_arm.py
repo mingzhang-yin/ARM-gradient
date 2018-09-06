@@ -25,19 +25,15 @@ def bernoulli_loglikelihood(b, log_alpha):
     return b * (-tf.nn.softplus(-log_alpha)) + (1 - b) * (-log_alpha - tf.nn.softplus(-log_alpha))
 
 def lrelu(x, alpha=0.2):
-    #weak nonlinearity, larger alpha, weaker nonlinearity
     return tf.nn.relu(x) - alpha * tf.nn.relu(-x)
 
 
 
 def encoder(x,b_dim,reuse=False):
-    #return logits #Eric Jang uses [512,256]
     with tf.variable_scope("encoder") as scope:
         if reuse:
             scope.reuse_variables()
         h2 = slim.stack(x, slim.fully_connected,[200,200],activation_fn=lrelu)
-#        h1 = tf.layers.dense(2. * x - 1., 200, tf.nn.relu, name="encoder_1")
-#        h2 = tf.layers.dense(h1, 200, tf.nn.relu, name="encoder_2")
         log_alpha = tf.layers.dense(h2, b_dim, activation=None)
     return log_alpha
 
@@ -48,8 +44,6 @@ def decoder(b,x_dim,reuse=False):
         if reuse:
             scope.reuse_variables()
         h2 = slim.stack(b ,slim.fully_connected,[200,200],activation_fn=lrelu)
-        #h1 = tf.layers.dense(2. * b - 1., 200, tf.nn.relu, name="decoder_1")
-        #h2 = tf.layers.dense(h1, 200, tf.nn.relu, name="decoder_2")
         log_alpha = tf.layers.dense(h2, x_dim, activation=None)
     return log_alpha
 
@@ -97,7 +91,6 @@ x_binary = tf.to_float(x > .5)
 
 N = tf.shape(x_binary)[0]
 
-#encoder q(b|x) = log Ber(b|log_alpha_b)
 #logits for bernoulli, p=sigmoid(logits)
 log_alpha_b = encoder(x_binary,b_dim)  #N*d_b 
 
@@ -131,7 +124,6 @@ alpha_grads = tf.expand_dims(F1-F2,axis=2)*(u_noise-0.5) #N*K_u*d_b
 alpha_grads = tf.reduce_mean(alpha_grads,axis=1) #N*d_b, expectation over u
 inf_vars = tf.get_collection(tf.GraphKeys.GLOBAL_VARIABLES, scope='encoder')
 #log_alpha_b is N*d_b, alpha_grads is N*d_b, inf_vars is d_theta
-#d_theta; should be devided by batch-size, but can be absorbed into learning rate
 inf_grads = tf.gradients(log_alpha_b, inf_vars, grad_ys=alpha_grads)#/b_s
 inf_gradvars = zip(inf_grads, inf_vars)
 inf_opt = tf.train.AdamOptimizer(lr)
