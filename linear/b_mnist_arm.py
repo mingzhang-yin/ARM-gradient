@@ -30,7 +30,6 @@ def lrelu(x, alpha=0.2):
 
 
 def encoder(x,b_dim,reuse=False):
-    #return logits #Eric Jang uses [512,256]
     with tf.variable_scope("encoder") as scope:
         if reuse:
             scope.reuse_variables()
@@ -123,7 +122,6 @@ alpha_grads = tf.expand_dims(F1-F2,axis=2)*(u_noise-0.5) #N*K_u*d_b
 alpha_grads = tf.reduce_mean(alpha_grads,axis=1) #N*d_b, expectation over u
 inf_vars = tf.get_collection(tf.GraphKeys.GLOBAL_VARIABLES, scope='encoder')
 #log_alpha_b is N*d_b, alpha_grads is N*d_b, inf_vars is d_theta
-#d_theta; should be devided by batch-size, but can be absorbed into learning rate
 inf_grads = tf.gradients(log_alpha_b, inf_vars, grad_ys=alpha_grads)#/b_s
 inf_gradvars = zip(inf_grads, inf_vars)
 inf_opt = tf.train.AdamOptimizer(lr)
