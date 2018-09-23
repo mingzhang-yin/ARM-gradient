@@ -283,7 +283,7 @@ def main(relaxation=None, learn_prior=True, max_iters=None,
     train_output_bias = -np.log(1. / np.clip(train_mean, 0.001, 0.999) - 1.).astype(np.float32)
 
     x = tf.placeholder(tf.float32, [None, 784])
-    #x = tf.to_float(x > .5)
+    x = tf.to_float(x > .5)
     x_im = tf.reshape(x, [-1, 28, 28, 1])
     #tf.summary.image("x_true", x_im)
 
