@@ -1,6 +1,6 @@
 # ARM: Augment-REINFORCE-Merge Gradient for Stochastic Binary Networks
 
-Code to show the simulation results in [ARM:Augment-REINFORCE-merge gradient for discrete latent variable models](https://openreview.net/pdf?id=S1lg0jAcYm)
+Code to show the simulation results in [ARM: Augment-REINFORCE-Merge Gradient for Stochastic Binary Networks](https://openreview.net/pdf?id=S1lg0jAcYm)
 
 # Data sets
 The MNIST data is  self-contained and the Omniglot data is in the repository. <br />
